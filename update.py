@@ -34,4 +34,4 @@ def update_project(branch_name):
 if __name__ == "__main__":
     branch_name = "main"  # Change this to the branch you want to update from
 
-    update_project(branch_name)
+    update_project(branch_name)1
