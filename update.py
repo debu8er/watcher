@@ -30,8 +30,3 @@ def update_project(branch_name):
         print("Project has been updated successfully using GitPython.")
     except Exception as e:
         print(f"An error occurred: {str(e)}")
-
-if __name__ == "__main__":
-    branch_name = "main"  # Change this to the branch you want to update from
-
-    update_project(branch_name)1
