@@ -1,15 +1,24 @@
 import os
 import git
 
+# Set your personal access token
+access_token = "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"
+
 def update_project(branch_name):
     try:
         # Get the current working directory, which is the project directory
         local_dir = os.getcwd()
 
+        # Construct the authenticated URL with your access token
+        repo_url = f"https://{access_token}@github.com/debu8er/watcher.git"
+
         repo = git.Repo(local_dir)
 
-        # Fetch the latest changes from the remote repository
+        # Set the remote URL to the authenticated URL
         origin = repo.remote()
+        origin.set_url(repo_url)
+
+        # Fetch the latest changes from the remote repository
         origin.fetch()
 
         # Check out the branch you want to update
