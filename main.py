@@ -43,4 +43,4 @@ def main():
     elif args.update:
         update_project("main")
 if __name__ == "__main__":
-    main()
+    main(1)
