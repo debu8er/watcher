@@ -28,16 +28,16 @@ def get_fresh(collection):
     for document in results:
         print_document(document)
 
-def get_all(collection):
+def get_all_sub(collection):
     results = collection.find()
     for document in results:
-        print_document(document)
+        print(document["sub"])
 
 def add_domain(collection, domain):
     mydoc = {"domain": domain}
     collection.insert_one(mydoc)
 
-def delete_domain(collection, domain):
+def remove_domain(collection, domain):
     mydoc = {"domain": domain}
     collection.delete_one(mydoc)
 
@@ -45,3 +45,16 @@ def get_full(collection):
     documents = collection.find()
     for document in documents:
         print_document(document)
+
+def filter_status(collection, status):
+    query = {"status": {"$eq": status}}
+    documents = collection.find(query)
+    for document in documents:
+        print_document(document)
+
+def filter_tech(collection, tech):
+    query = {"status": {"$eq": tech}}
+    documents = collection.find()
+    for document in documents:
+        if document["tech"] != None and tech in document["tech"]:
+            print_document(document)
