@@ -46,10 +46,10 @@ class MongoOperations:
         mydoc = {"domain": self.collection.name}
         self.collection2.delete_one(mydoc)
 
-    def get_full(self):
+    def get_full(self, only_sub):
         documents = self.collection.find()
         for document in documents:
-            self.print_document(document)
+            self.print_document(document, only_sub)
 
     def filter_status(self, status, only_sub):
         query = {"status": int(status)} if status and status is not True else {"status": {"$ne": None}}
