@@ -1,63 +1,42 @@
 import argparse
-from mymongo import (
-    initialize_mongo_collection,
-    get_status_changed,
-    get_tech_changed,
-    get_fresh,
-    get_all_sub,
-    add_domain,
-    remove_domain,
-    filter_status,
-    filter_tech,
-    get_full
-    )
-from update import update_project
+from mymongo import MongoOperations
 
 def main():
-    parser = argparse.ArgumentParser(description="Watch")
-    parser.add_argument("-d", "--domain", help="domain input.")
-    parser.add_argument("-a", "--add", help="add new domain", action="store_true")
-    parser.add_argument("-r", "--remove", help="remove domain", action="store_true")
-    parser.add_argument("-s", "--status", help="filter by status.")
-    parser.add_argument("-t", "--tech", help="filter by technologies.")
-    parser.add_argument("-sc", "--status-changed", help="filter by status changed", action="store_true")
-    parser.add_argument("-tc", "--tech-changed", help="filter by technologies.", action="store_true")
-    parser.add_argument("-f", "--fresh", help="filter by fresh", action="store_true")
-    parser.add_argument("-as", "--all-sub", help="get all sub in result.", action="store_true")
-    parser.add_argument("-fr", "--full-result", help="get full result.", action="store_true")
+    parser = argparse.ArgumentParser(description="Domain Management Tool")
+    parser.add_argument("-d", "--domain", help="Specify the domain.")
+    parser.add_argument("-a", "--add", action="store_true", help="Add a new domain.")
+    parser.add_argument("-r", "--remove", action="store_true", help="Remove a domain.")
+    parser.add_argument("-s", "--status", nargs='?', const=True, default=False, help="Filter by status.")
+    parser.add_argument("-t", "--tech", nargs='?', const=True, default=False, help="Filter by technologies.")
+    parser.add_argument("-sc", "--status-changed", action="store_true", help="Filter by status change.")
+    parser.add_argument("-tc", "--tech-changed", action="store_true", help="Filter by technology change.")
+    parser.add_argument("-f", "--fresh", action="store_true", help="Filter by freshness.")
+    parser.add_argument("-os", "--only-sub", action="store_true", help="Retrieve only subdomains.")
 
     args = parser.parse_args()
 
-    print(args)
-
-    if args.domain is None:
+    if not args.domain:
         print("Please provide a domain using the -d option.")
         return
 
-    mongodb_uri = "mongodb://localhost:27017"
-    collection = initialize_mongo_collection(args.domain.split(".")[0], mongodb_uri)
-    collection2 = initialize_mongo_collection("domains", mongodb_uri)
-    
-    if args.domain and not any([args.add, args.remove, args.status, args.tech, args.status_changed, args.tech_changed, args.fresh, args.full_result]):
-        get_full(collection)   
+    mongo_ops = MongoOperations(args.domain)
 
     if args.add:
-        add_domain(collection2, args.add)
+        mongo_ops.add_domain()
     elif args.remove:
-        remove_domain(collection2, args.remove)
+        mongo_ops.remove_domain()
     elif args.fresh:
-        get_fresh(collection)
+        mongo_ops.get_fresh(args.only_sub)
     elif args.status_changed:
-        get_status_changed(collection)
+        mongo_ops.get_status_changed(args.only_sub)
     elif args.tech_changed:
-        get_tech_changed(collection)
-    elif args.all_sub:
-        get_all_sub(collection)
-    elif args.full_result:
-        get_full(collection)
+        mongo_ops.get_tech_changed(args.only_sub)
     elif args.status:
-        filter_status(collection, int(args.status))
+        mongo_ops.filter_status(args.status, args.only_sub)
     elif args.tech:
-        filter_tech(collection, args.tech)
+        mongo_ops.filter_tech(args.tech, args.only_sub)
+    else:
+        mongo_ops.get_full(args.only_sub)
+
 if __name__ == "__main__":
     main()
