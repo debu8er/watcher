@@ -33,11 +33,6 @@ class MongoOperations:
         for document in results:
             self.print_document(document, only_sub)
 
-    def get_all_sub(self):
-        results = self.collection.find()
-        for document in results:
-            print(document.get("sub", "No subdomain found"))
-
     def add_domain(self):
         mydoc = {"domain": self.collection.name}
         self.collection2.insert_one(mydoc)
