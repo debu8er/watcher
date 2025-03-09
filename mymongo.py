@@ -33,8 +33,8 @@ class MongoOperations:
         for document in results:
             self.print_document(document, only_sub)
 
-    def add_domain(self):
-        mydoc = {"domain": self.collection.name}
+    def add_domain(self, active):
+        mydoc = {"domain": self.collection.name, "active": active}
         self.collection2.insert_one(mydoc)
 
     def remove_domain(self):

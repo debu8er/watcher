@@ -12,6 +12,7 @@ def main():
     parser.add_argument("-tc", "--tech-changed", action="store_true", help="Filter by technology change.")
     parser.add_argument("-f", "--fresh", action="store_true", help="Filter by freshness.")
     parser.add_argument("-os", "--only-sub", action="store_true", help="Retrieve only subdomains.")
+    parser.add_argument("-ac", "--active", action="store_true", help="Scan active subdomains.")
 
     args = parser.parse_args()
 
@@ -22,7 +23,7 @@ def main():
     mongo_ops = MongoOperations(args.domain)
 
     if args.add:
-        mongo_ops.add_domain()
+        mongo_ops.add_domain(args.active)
     elif args.remove:
         mongo_ops.remove_domain()
     elif args.fresh:
