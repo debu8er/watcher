@@ -8,6 +8,10 @@ class MongoOperations:
         self.mongodb_uri = "mongodb://localhost:27017"
         self.client = pymongo.MongoClient(self.mongodb_uri)
         self.db = self.client["mydatabase"]
+        if domain not in self.db.list_collection_names():
+            self.db.create_collection(domain)
+        else:
+            print(f"already exists")
         self.collection = self.db[domain]
         self.collection2 = self.db["domains"]
 
